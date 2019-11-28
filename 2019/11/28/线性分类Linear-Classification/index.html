@@ -23,7 +23,7 @@
 <li>贝叶斯派 $ \to $ 概率图模型 </li>
 <li>频率派 $ \to $ 统计机器学习<ul>
 <li>线性回归是统计机器学习中一个最基础、最简单也是最核心的模型，打破下面的三个性质中的某个性质可以带来新的模型。<ul>
-<li>线性 $ \to \begin{cases} \text{属性非线性：特征转换（多项式回归）} \ \text{全局非线性：线性分类} \ \text{系数非线性：神经网络} \end{cases}$ </li>
+<li>线性 <script type="math/tex">\to \begin{cases} \text{属性非线性：特征转换（多项式回归）} \\ \text{全局非线性：线性分类} \\ \text{系数非线性：神经网络} \end{cases}</script></li>
 <li>全局性 $ \to \text{线性样条回归、决策树}$</li>
 <li>数据未加工 $ \to \text {PCA，流形} $</li>
 </ul>
@@ -41,7 +41,7 @@
 \begin{cases}
 软分类 \begin{cases} \text{线性判别分析：fisher} \\ \text{感知机} \end{cases} \\
 硬分类 \begin{cases} \text{生成式：高斯判别分析Gaussian Discriminant Analysis} \\ \text{判别式：逻辑回归Logistic Regression} \end{cases}
-\end{cases}</script><h2 id="1-感知机算法-Perceptron"><a href="#1-感知机算法-Perceptron" class="headerlink" title="1.感知机算法 Perceptron"></a>1.感知机算法 Perceptron</h2><p><strong>思想：错误驱动</strong><br>模型：$ f(x) = sign(w^Tx), x \in \mathbb{R}^p, w\in \mathbb{R}^p, \text{省略了b}$<br>其中，符号函数$ sign(a) = \begin{cases} +1,a \geq  0 \-1,a&lt;0\ \end{cases}$<br>策略/损失函数设计：根据错误驱动的思想，我们用一个集合$D={\text{被错误分类的样本}}$。这样我们可以设计出损失函数：</p>
+\end{cases}</script><h2 id="1-感知机算法-Perceptron"><a href="#1-感知机算法-Perceptron" class="headerlink" title="1.感知机算法 Perceptron"></a>1.感知机算法 Perceptron</h2><p><strong>思想：错误驱动</strong><br>模型：$ f(x) = sign(w^Tx), x \in \mathbb{R}^p, w\in \mathbb{R}^p, \text{省略了b}$<br>其中，符号函数<script type="math/tex">sign(a) = \begin{cases} +1,a \geq  0 \\ -1,a<0 \\ \end{cases}</script><br>策略/损失函数设计：根据错误驱动的思想，我们用一个集合$D={\text{被错误分类的样本}}$。这样我们可以设计出损失函数：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
 L(x) =& \sum_{i=1}^NI\{y_i(w^Tx_i)\},\text{即错误样本的个数，但是不可导} \\ \Downarrow \\
