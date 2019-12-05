@@ -90,7 +90,7 @@ s.t.\ u_k^Tu_k=1
 <script type="math/tex; mode=display">S_{p*p} = X^THX=X^TH^THX=V\Sigma U^TU \Sigma V^T = V\Sigma^2V^T</script><p>这个式子与上面做特征值分解的式子可以相对应，那么也就有了$G=V,K=\Sigma^2$。<br>然后，我们再定义一个矩阵$T$：</p>
 <script type="math/tex; mode=display">T_{N*N} = HX X^TH^T = U\Sigma V^T V \Sigma U^T = U \Sigma^2U^T</script><p>不难看出$T$和$S$具有相同的eigen value。<br>我们知道对$S$矩阵做特征分解可以得到方向（主成分），然后用$HX·V$就可以得到在坐标矩阵，而$HX·V = U\Sigma V^T V = U\Sigma$。<br>也就是说对$T$矩阵做特征分解可以直接得到坐标。我们将这种对$T$矩阵做特征分解的方法称为<strong>主坐标分析（Principle Coordinate Analysis,PCoA）</strong>。</p>
 <h3 id="2-4概率角度"><a href="#2-4概率角度" class="headerlink" title="2.4概率角度"></a>2.4概率角度</h3><p>这一节从概率角度理解主成分分析，从概率角度可以称作<strong>P-PCA</strong>。我们知道降维的目的是让原始数据从$x (observed\ data)$所在的$p$维空间对应到$z(latent\ data)$所在的$q$维空间。即：</p>
-<script type="math/tex; mode=display">x\in \mathbb{R}^p \rightarrow z \in \mathbb{R}^q,q<p</script><p>那么我们可以给$z$一个先验 $z \sim N(0<em>q,I_q)$，对$x$做线性变换再加上一个噪声$x = w</em>{p*q}z+\mu+\varepsilon$，并且噪声是满足一个分布$\varepsilon \sim N(0,\sigma^2I_p)$。于是我们就得到了这样一组假设：</p>
+<script type="math/tex; mode=display">x\in \mathbb{R}^p \rightarrow z \in \mathbb{R}^q,q<p</script><p>那么我们可以给$z$一个先验，对$x$做线性变换再加上一个噪声，并且噪声是满足一个分布。于是我们就得到了这样一组假设：</p>
 <script type="math/tex; mode=display">
 \begin{cases}
 z \sim N(0_q,I_q) \\
@@ -106,12 +106,12 @@ Var[x|z]= & Var[wz+\mu+\varepsilon] = \sigma^2I \\
 <script type="math/tex; mode=display">
 \begin{aligned}
 E[x] = & E[wz+\mu+\varepsilon] =E[wz+\mu] +E[\varepsilon] = \mu \\
-Var[x|z]= & Var[wz+\mu+\varepsilon] = Var[wz]+Var[\varepsilon] = wIw^T+\sigma^2I  = ww^T+\sigma^2I\\
+Var[x]= & Var[wz+\mu+\varepsilon] = Var[wz]+Var[\varepsilon] = wIw^T+\sigma^2I  = ww^T+\sigma^2I\\
 \implies x \sim & N(\mu,ww^T+\sigma^2I)
 \end{aligned}</script><p>下面求$P(z|x)$。在这里先讲一个引论：</p>
 <blockquote>
-<p>如何从联合概率分布求条件概率分布？<br>假设$x=\begin{pmatrix}x<em>a \ x_b \end{pmatrix}$，$x\sim (\begin{bmatrix} \mu_a \ \mu_b \end{bmatrix},\begin{bmatrix} \Sigma</em>{aa} &amp; \Sigma<em>{ab} \ \Sigma</em>{ba} &amp; \Sigma_{bb} \end{bmatrix})$</p>
-<script type="math/tex; mode=display">\begin{aligned} x_{ba} =& x_b- \Sigma_{ba}\Sigma_{aa}^{-1}x_a \\ \mu_{ba}=&\mu_b - \Sigma_{ba}\Sigma_{aa}^{-1}\mu_a \\ \Sigma_{bba} =& \Sigma_{bb}-\Sigma_{ba}\Sigma_{aa}^{-1}\Sigma_{ab} \\ x_{ba} \sim& N(\mu_{ba},\Sigma_{bba})  \end{aligned}</script><p>又因为$x<em>b = x</em>{ba}+\Sigma<em>{ba}\Sigma</em>{aa}^{-1}x_a$<br>所以可以得到：</p>
+<p><strong>如何从联合概率分布求条件概率分布？</strong><br>假设<script type="math/tex">x=\begin{pmatrix}x_a \\ x_b \end{pmatrix}$，$x\sim (\begin{bmatrix} \mu_a \\ \mu_b \end{bmatrix},\begin{bmatrix} \Sigma_{aa} & \Sigma_{ab} \\ \Sigma_{ba} & \Sigma_{bb} \end{bmatrix})</script></p>
+<script type="math/tex; mode=display">\begin{aligned} x_{ba} =& x_b- \Sigma_{ba}\Sigma_{aa}^{-1}x_a \\ \mu_{ba}=&\mu_b - \Sigma_{ba}\Sigma_{aa}^{-1}\mu_a \\ \Sigma_{bba} =& \Sigma_{bb}-\Sigma_{ba}\Sigma_{aa}^{-1}\Sigma_{ab} \\ x_{ba} \sim& N(\mu_{ba},\Sigma_{bba})  \end{aligned}</script><p>又因为<script type="math/tex">x_b = x_{ba}+\Sigma_{ba}\Sigma_{aa}^{-1}x_a</script><br>所以可以得到：</p>
 <script type="math/tex; mode=display">\begin{cases} E[x_b|x_a]= E[x_{ba}]+\Sigma_{ba}\Sigma_{aa}^{-1}x_a=\mu_{ba}+\Sigma_{ba}\Sigma_{aa}^{-1}x_a=\mu_b+\Sigma_{ba}\Sigma_{aa}^{-1}(x_a-\mu_a) \\ Var[x_b|x_a]=Var[x_{ba}]=\Sigma_{bba} \end{cases}</script><script type="math/tex; mode=display">\implies x_b|x_a \sim N(\mu_b+\Sigma_{ba}\Sigma_{aa}^{-1}(x_a-\mu_a),\Sigma_{bba})</script></blockquote>
 <p>根据这个引论，只需求出$x$和$z$的联合概率分布即可：</p>
 <script type="math/tex; mode=display">\begin{pmatrix}x \\ z \end{pmatrix} \sim N(\begin{bmatrix} \mu \\ 0 \end{bmatrix},\begin{bmatrix} ww^T+\sigma^2I & \Delta \\ \Delta^T & I \end{bmatrix})</script><p>求联合概率分布需要求出$\Delta$：</p>
