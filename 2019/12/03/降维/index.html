@@ -110,7 +110,7 @@ Var[x]= & Var[wz+\mu+\varepsilon] = Var[wz]+Var[\varepsilon] = wIw^T+\sigma^2I  
 \implies x \sim & N(\mu,ww^T+\sigma^2I)
 \end{aligned}</script><p>下面求$P(z|x)$。在这里先讲一个引论：</p>
 <blockquote>
-<p><strong>如何从联合概率分布求条件概率分布？</strong><br>假设<script type="math/tex">x=\begin{pmatrix}x_a \\ x_b \end{pmatrix}$，$x\sim (\begin{bmatrix} \mu_a \\ \mu_b \end{bmatrix},\begin{bmatrix} \Sigma_{aa} & \Sigma_{ab} \\ \Sigma_{ba} & \Sigma_{bb} \end{bmatrix})</script></p>
+<p><strong>如何从联合概率分布求条件概率分布？</strong><br>假设<script type="math/tex">x=\begin{pmatrix}x_a \\ x_b \end{pmatrix} , x\sim (\begin{bmatrix} \mu_a \\ \mu_b \end{bmatrix},\begin{bmatrix} \Sigma_{aa} & \Sigma_{ab} \\ \Sigma_{ba} & \Sigma_{bb} \end{bmatrix})</script></p>
 <script type="math/tex; mode=display">\begin{aligned} x_{ba} =& x_b- \Sigma_{ba}\Sigma_{aa}^{-1}x_a \\ \mu_{ba}=&\mu_b - \Sigma_{ba}\Sigma_{aa}^{-1}\mu_a \\ \Sigma_{bba} =& \Sigma_{bb}-\Sigma_{ba}\Sigma_{aa}^{-1}\Sigma_{ab} \\ x_{ba} \sim& N(\mu_{ba},\Sigma_{bba})  \end{aligned}</script><p>又因为<script type="math/tex">x_b = x_{ba}+\Sigma_{ba}\Sigma_{aa}^{-1}x_a</script><br>所以可以得到：</p>
 <script type="math/tex; mode=display">\begin{cases} E[x_b|x_a]= E[x_{ba}]+\Sigma_{ba}\Sigma_{aa}^{-1}x_a=\mu_{ba}+\Sigma_{ba}\Sigma_{aa}^{-1}x_a=\mu_b+\Sigma_{ba}\Sigma_{aa}^{-1}(x_a-\mu_a) \\ Var[x_b|x_a]=Var[x_{ba}]=\Sigma_{bba} \end{cases}</script><script type="math/tex; mode=display">\implies x_b|x_a \sim N(\mu_b+\Sigma_{ba}\Sigma_{aa}^{-1}(x_a-\mu_a),\Sigma_{bba})</script></blockquote>
 <p>根据这个引论，只需求出$x$和$z$的联合概率分布即可：</p>
