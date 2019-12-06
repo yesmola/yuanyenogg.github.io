@@ -85,7 +85,7 @@ s.t. & \sum_{i=1}^N\lambda_i y_i = 0, \\
 \lambda_i \geq 0 \\
 1-y_i(w^Tx_i+b) \leq 0
 \end{cases}</script><p>首先根据条件一：梯度条件可以求出$w^*$：</p>
-<script type="math/tex; mode=display">w^* = \sum_{i=1}^N \lambda_i^* y_i x_i</script><p>其中至少有一个$ \lambda_j^<em> &gt; 0 $，因为如果$ \lambda^</em> = 0 $，就可知 $ w^<em> =0 $，这不是原问题的解，产生矛盾。我们也可以从图像角度分析，在样本中，根据KKT条件二和条件三，那些函数距离大于1的点都会导致$ \lambda = 0 $，也就是没有对问题的解产生贡献，而只有那些函数距离等于1的点起了作用。那些函数距离等于1的点，我们将它们称为 <em>*支持向量</em></em> 。<br>假设支持向量为$ x_k$那么，根据条件二互补松弛条件有：</p>
+<script type="math/tex; mode=display">w^* = \sum_{i=1}^N \lambda_i^* y_i x_i</script><p>其中至少有一个<script type="math/tex">\lambda_j^* > 0</script>，因为如果<script type="math/tex">\lambda^* = 0</script>，就可知 <script type="math/tex">w^* =0</script>，这不是原问题的解，产生矛盾。我们也可以从图像角度分析，在样本中，根据KKT条件二和条件三，那些函数距离大于1的点都会导致<script type="math/tex">\lambda = 0</script>，也就是没有对问题的解产生贡献，而只有那些函数距离等于1的点起了作用。那些函数距离等于1的点，我们将它们称为 <strong>支持向量</strong> 。<br>假设支持向量为$ x_k$那么，根据条件二互补松弛条件有：</p>
 <script type="math/tex; mode=display">1-y_k(w^Tx_k+b^*) = 0</script><script type="math/tex; mode=display">\implies b^* = y_k-w^Tx_k = y_k - \sum_{i=1}^N \lambda_iy_i x_i^T x_k</script><p>所以最终的超平面可以表示为：</p>
 <script type="math/tex; mode=display">\sum_{i=1}^N \lambda_i^* y_ix_i^Tx + b^* = 0</script><p>分类决策函数可以写成：</p>
 <script type="math/tex; mode=display">f(x) = sign(\sum_{i=1}^N \lambda_i^* y_ix_i^Tx + b^*)</script><p>线性可分支持向量机和硬间隔最大化推导完毕。</p>
