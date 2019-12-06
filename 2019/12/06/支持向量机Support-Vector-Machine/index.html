@@ -1,0 +1,117 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><title>支持向量机 Support Vector Machine | Wildness</title><meta name="description" content="支持向量机 Support Vector Machine"><meta name="keywords" content="算法,笔记"><meta name="author" content="Yuan Ye"><meta name="copyright" content="Yuan Ye"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="canonical" href="http://yuanyenogg.github.io/2019/12/06/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BASupport-Vector-Machine/"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="支持向量机 Support Vector Machine"><meta name="twitter:description" content="支持向量机 Support Vector Machine"><meta name="twitter:image" content="https://i.loli.net/2019/12/06/eYFESK4NuXCcvQ8.png"><meta property="og:type" content="article"><meta property="og:title" content="支持向量机 Support Vector Machine"><meta property="og:url" content="http://yuanyenogg.github.io/2019/12/06/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BASupport-Vector-Machine/"><meta property="og:site_name" content="Wildness"><meta property="og:description" content="支持向量机 Support Vector Machine"><meta property="og:image" content="https://i.loli.net/2019/12/06/eYFESK4NuXCcvQ8.png"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="next" title="降维 Dimensionality Reduction" href="http://yuanyenogg.github.io/2019/12/03/%E9%99%8D%E7%BB%B4/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://blog.liming.ml/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  highlight_copy: 'true',
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    title: '添加书签',
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天'
+
+  
+}</script></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-概述"><span class="toc-number">1.</span> <span class="toc-text">0.概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-硬间隔分类器-Hard-Margin-SVM-线性可分支持向量机"><span class="toc-number">2.</span> <span class="toc-text">1.硬间隔分类器 Hard-Margin SVM 线性可分支持向量机</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#问题建模"><span class="toc-number">2.1.</span> <span class="toc-text">问题建模</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模型转换"><span class="toc-number">2.2.</span> <span class="toc-text">模型转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#KKT条件"><span class="toc-number">2.3.</span> <span class="toc-text">KKT条件</span></a></li></ol></li></ol></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://i.loli.net/2019/12/06/eYFESK4NuXCcvQ8.png)"><div id="page-header"><span class="pull-left"> <a class="blog_title" id="site-name" href="/">Wildness</a></span><div class="open toggle-menu pull-right"><div class="menu-icon-first"></div><div class="menu-icon-second"></div><div class="menu-icon-third"></div></div><span class="pull-right menus"><div class="mobile_author_icon"><img class="lozad" src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'"><div class="mobile_author-info__description"></div></div><hr><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> Home</span></a><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> Archives</span></a><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> Tags</span></a><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> Categories</span></a><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> Link</span></a><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> About</span></a><script>document.body.addEventListener('touchstart', function(){ });</script></div></span><span class="pull-right"></span></div><div id="post-info"><div id="post-title"><div class="posttitle">支持向量机 Support Vector Machine</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 发表于 2019-12-06<span class="post-meta__separator">|</span><i class="fa fa-history" aria-hidden="true"></i> 更新于 2019-12-06</time><span class="post-meta__separator mobile_hidden">|</span><span class="mobile_hidden"><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a></span></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><p><em>本文学习自<a href="https://space.bilibili.com/97068901/channel/detail?cid=92387" target="_blank" rel="noopener">bilibili机器学习白板推导系列</a>，统计学习方法（李航）</em></p>
+<h2 id="0-概述"><a href="#0-概述" class="headerlink" title="0.概述"></a>0.概述</h2><p>支持向量机（Support Vector Machine），简称SVM。有一句俗语：SVM有三宝——间隔、对偶、核技巧。<br>SVM分类：</p>
+<ul>
+<li>硬间隔 hard-margin SVM</li>
+<li>软间隔 soft-margin SVM</li>
+<li>核函数 kernel SVM</li>
+</ul>
+<p>SVM拿二分类来说，SVM认为分类平面为$w^Tx+b $，从这点看SVM是个纯粹的判别模型，和概率无关。而SVM就是要找到一个超平面，使得它离所有样本点的距离都足够大。<br><img alt="SVM.png" data-src="https://i.loli.net/2019/12/06/g81LtyJWZwGvjcH.png" class="lozad"></p>
+<h2 id="1-硬间隔分类器-Hard-Margin-SVM-线性可分支持向量机"><a href="#1-硬间隔分类器-Hard-Margin-SVM-线性可分支持向量机" class="headerlink" title="1.硬间隔分类器 Hard-Margin SVM 线性可分支持向量机"></a>1.硬间隔分类器 Hard-Margin SVM 线性可分支持向量机</h2><h3 id="问题建模"><a href="#问题建模" class="headerlink" title="问题建模"></a>问题建模</h3><p>硬间隔分类器又叫做最大间隔分类器。假设样本为：<script type="math/tex">\{(x_i,y_i)\}_{i=1}^N,x_i\in\mathbb{R}^p,y_i\in\{-1,1\}</script><br>我们从最大间隔分类这个角度就能很自然的写出硬间隔分类SVM的目标函数：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\max \, margin(w,b) = \max_{w,b}\,\min_{x_i,i=1,\cdots,N} distance(w,b,x_i) = \max_{w,b}\,\min_{x_i,i=1,\cdots,N} \frac {1} {\|w\|} | w^Tx_i+b| \\
+&s.t.\ \ \ y_i(w^Tx_i+b)>0, \forall i=1,2,\cdots,N
+\end{aligned}</script><p>继续对这个问题进行转化：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\max_{w,b}\,\min_{x_i,i=1,\cdots,N} \frac {1} {\|w\|} | w^Tx_i+b| = \max_{w,b}\frac {1} {\|w\|}\min_{x_i,i=1,\cdots,N}  y_i(w^Tx_i+b)\\
+&s.t.\ \ \ y_i(w^Tx_i+b)>0 \iff \exists \gamma >0,s.t. \min y_i(w^Tx_i+b)=\gamma
+\end{aligned}</script><p>这里的$\gamma$是可以缩放的，这里我们可以取它为1，方便计算。那么可以继续改写这个问题</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\max_{w,b}\frac {1} {\|w\|} \\
+&s.t.\ \ \ \min y_i(w^Tx_i+b)=1 \\
+\iff & \min_{w,b} \frac {1} {2} w^Tw \\
+&s.t.\ \ \ y_i(w^Tx_i+b)\geq 1
+\end{aligned}</script><blockquote>
+<p>我们插入《统计机器学习》里面的两个概念，函数间隔和几何间隔。<br>函数间隔（functional margin）：对于给定的训练数据集$ T $ 和超平面 $ (w,b)$，定义超平面关于样本点 $ (x_i,y_i) $的函数间隔为 <script type="math/tex">\hat{\gamma_i} = y_i (w^Tx_i+b)</script><br>函数间隔可以表示分类预测的正确性和确信度。但是选择分离超平面时。只有函数间隔还是不够的。因为只要成比例地改变$w$和$b$，超平面并没有发生改变，但是函数间隔却被缩放了。所以我们需要对超平面的法向量$w$加以约束，比如规范化$|w|=1$，这也导出了几何间隔的概念：对于给定的训练数据集$ T $ 和超平面 $ (w,b)$，定义超平面关于样本点 $ (x_i,y_i) $的几何间隔为 <script type="math/tex">\gamma_i = \frac {y_i (w^Tx_i+b)} {\|w\|}</script>。<br>所以在这本书中，最大间隔分类可以表示为使得样本对于超平面的几何间隔最大：</p>
+<script type="math/tex; mode=display">\begin{aligned}&\max_{w,b}\ \gamma \\ &s.t.\ \ \ \frac {y_i (w^Tx_i+b)} {\|w\|} \geq \gamma,i=1,2,\cdots,N\end{aligned}</script><p>考虑到几何间隔和函数间隔的关系，可讲这个问题改写为：</p>
+<script type="math/tex; mode=display">\begin{aligned}&\max_{w,b}\ \hat{\gamma} \\ &s.t.\ \ \ y_i (w^Tx_i+b) \geq \hat{\gamma},i=1,2,\cdots,N\end{aligned}</script><p>在考虑对函数间隔的缩放，将其取为1，也就可以得到了和我们之前推导的同样的问题结构。</p>
+</blockquote>
+<p>这是一个凸二次规划（convex quadratic programming）问题，也是一个凸优化问题（convex optimization）。</p>
+<h3 id="模型转换"><a href="#模型转换" class="headerlink" title="模型转换"></a>模型转换</h3><p>数据表示：<script type="math/tex">\{(x_i,y_i)\}_{i=1}^N,x_i\in\mathbb{R}^p,y_i\in\{-1,1\}</script><br>首先我们写出带约束的原问题：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+& \min_{w,b} \frac {1} {2} w^Tw \\
+& s.t.\ \ \ 1-y_i(w^Tx_i+b) \leq 0
+\end{aligned}</script><p>利用拉格朗日乘子法转换为关于$(w,b)$的无约束问题：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+& L(w,b,\lambda) = \frac{1}{2}w^Tw+\sum_{i=1}^N\lambda_i(1-y_i(w^Tx_i+b)) \\
+\implies & \min_{w,b} \max_{\lambda }L(w,b,\lambda) \\
+& s.t.\ \ \ \lambda_i \geq  0
+\end{aligned}</script><p>将无约束问题转换为对偶问题（为什么和对偶问题等价呢？凸二次规划问题具有强对偶性）：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+& L(w,b,\lambda) = \frac{1}{2}w^Tw+\sum_{i=1}^N\lambda_i(1-y_i(w^Tx_i+b)) \\
+\implies & \max_{\lambda }\min_{w,b}L(w,b,\lambda) \\
+& s.t.\ \ \ \lambda_i \geq  0
+\end{aligned}</script><p>下面对这个问题求解。<br>第一步，求$b$：</p>
+<script type="math/tex; mode=display">\frac {\partial{L}} {\partial{b}} = \frac {\partial} {\partial{b}}[\sum_{i=1}^{N} \lambda_i - \sum_{i=1}^N\lambda_i y_i(w^T+b)] = - \sum_{i=1}^N \lambda_i y_i =0</script><p>将这个结论带入$L$中可以得到：</p>
+<script type="math/tex; mode=display">L = \frac {1} {2} w^Tw +\sum_{i=1}^N \lambda_i - \sum_{i=1}^N \lambda_i y_i w^T x_i</script><p>第二步，求$w$：</p>
+<script type="math/tex; mode=display">\frac {\partial{L}} {\partial{w}} = w - \sum_{i=1}^N \lambda_i y_i x_i=0 \implies w = \sum_{i=1}^N \lambda_i y_i x_i</script><p>将这个结论带入$L$中可以得到：</p>
+<script type="math/tex; mode=display">L = \frac {1} {2} （\sum_{i=1}^N \lambda_i y_i x_i）^T（\sum_{i=1}^N \lambda_i y_i x_i）+\sum_{i=1}^N \lambda_i - \sum_{i=1}^N \lambda_i y_i （\sum_{i=1}^N \lambda_i y_i x_i）^T x_i</script><p>展开消项可以得到：</p>
+<script type="math/tex; mode=display">L = - \frac {1} {2} \sum_{i=1}^N \sum_{j=1}^N \lambda_i \lambda_j y_i y_j x_i^T x_j +\sum_{i=1}^N \lambda_i</script><p>所以我们带入$L$并取反，就得到了问题的最终形式：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\min & \frac {1} {2} \sum_{i=1}^N \sum_{j=1}^N \lambda_i \lambda_j y_i y_j x_i^T x_j -\sum_{i=1}^N \lambda_i\\
+s.t. & \sum_{i=1}^N\lambda_i y_i = 0, \\
+& \lambda_i \geq 0,i=1,2,\cdots,N
+\end{aligned}</script><h3 id="KKT条件"><a href="#KKT条件" class="headerlink" title="KKT条件"></a>KKT条件</h3><p>原问题和对偶问题具有强对偶关系的强对偶条件的<strong>充要条件</strong>是满足KKT条件。<br>如果我们假设上面的最终问题的约束求出的$\lambda$的解为：</p>
+<script type="math/tex; mode=display">\lambda^* = (\lambda_1^*\ \lambda_2^*\ \cdots\ \lambda_N^*)^T</script><p>我们通过KKT条件可以列出一组方程来求出最终的解$w^<em>$和$b^</em>$。KKT条件：</p>
+<script type="math/tex; mode=display">
+\begin{cases}
+\frac {\partial{L}} {\partial{w}} =0 \; \frac {\partial{L}} {\partial{b}} =0 \; \frac {\partial{L}} {\partial{\lambda}} =0 \\
+\lambda_i (1-y_i(w^Tx_i+b)) = 0 \\
+\lambda_i \geq 0 \\
+1-y_i(w^Tx_i+b) \leq 0
+\end{cases}</script><p>首先根据条件一：梯度条件可以求出$w^*$：</p>
+<script type="math/tex; mode=display">w^* = \sum_{i=1}^N \lambda_i^* y_i x_i</script><p>其中至少有一个$\lambda_j^<em> &gt; 0 $，因为如果$ \lambda^</em> = 0 $，就可知 $ w^<em> =0$，这不是原问题的解，产生矛盾。我们也可以从图像角度分析，在样本中，根据KKT条件二和条件三，那些函数距离大于1的点都会导致必然有$\lambda = 0$，也就是没有对问题的解产生贡献，而只有那些函数距离等于1的点起了作用。那些函数距离等于1的点，我们将它们称为<em>*支持向量</em></em>。<br>假设支持向量为$ x_k$那么，根据条件二互补松弛条件有：</p>
+<script type="math/tex; mode=display">1-y_k(w^Tx_k+b^*) = 0</script><script type="math/tex; mode=display">\implies b^* = y_k-w^Tx_k = y_k - \sum_{i=1}^N \lambda_iy_i x_i^T x_k</script><p>所以最终的超平面可以表示为：</p>
+<script type="math/tex; mode=display">\sum_{i=1}^N \lambda_i^* y_ix_i^Tx + b^* = 0</script><p>分类决策函数可以写成：</p>
+<script type="math/tex; mode=display">f(x) = sign(\sum_{i=1}^N \lambda_i^* y_ix_i^Tx + b^*)</script><p>线性可分支持向量机和硬间隔最大化推导完毕。</p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined" target="_blank" rel="noopener">Yuan Ye</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://yuanyenogg.github.io/2019/12/06/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BASupport-Vector-Machine/">http://yuanyenogg.github.io/2019/12/06/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BASupport-Vector-Machine/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://yuanyenogg.github.io">Wildness</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AE%97%E6%B3%95/">算法    </a><a class="post-meta__tags" href="/tags/%E7%AC%94%E8%AE%B0/">笔记    </a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2019/12/06/eYFESK4NuXCcvQ8.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script></div></div><nav class="pagination_post" id="pagination"><div class="next-post pull-full"><a href="/2019/12/03/%E9%99%8D%E7%BB%B4/"><img class="next_cover lozad" data-src="https://i.loli.net/2019/12/03/PhIYejAgvFkJp5d.png" onerror="onerror=null;src='/img/404.jpg'"><div class="label">下一篇</div><div class="next_info"><span>降维 Dimensionality Reduction</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> 相关推荐</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2019/12/03/降维/" title="降维 Dimensionality Reduction"><img class="relatedPosts_cover lozad"data-src="https://i.loli.net/2019/12/03/PhIYejAgvFkJp5d.png"><div class="relatedPosts_title">降维 Dimensionality Reduction</div></a></div><div class="relatedPosts_item"><a href="/2019/11/20/线性回归Linear-Regression/" title="线性回归 Linear Regression"><img class="relatedPosts_cover lozad"data-src="https://i.loli.net/2019/11/20/wt8avdzIUC5iM4Z.png"><div class="relatedPosts_title">线性回归 Linear Regression</div></a></div><div class="relatedPosts_item"><a href="/2019/11/28/线性分类Linear-Classification/" title="线性分类 Linear Classification"><img class="relatedPosts_cover lozad"data-src="https://i.loli.net/2019/11/28/d9fj75LGWyKelOg.png"><div class="relatedPosts_title">线性分类 Linear Classification</div></a></div><div class="relatedPosts_item"><a href="/2019/11/27/深入理解计算机系统/" title="深入理解计算机系统"><img class="relatedPosts_cover lozad"data-src="https://i.loli.net/2019/11/28/RjFSQsG1rkV6eDo.png"><div class="relatedPosts_title">深入理解计算机系统</div></a></div></div><div class="clear_both"></div></div></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2019 By Yuan Ye</div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><section class="rightside" id="rightside"><i class="fa fa-book" id="readmode" title="阅读模式"> </i><i class="fa fa-plus" id="font_plus" title="放大字体"></i><i class="fa fa-minus" id="font_minus" title="缩小字体"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" target="_blank" rel="noopener" title="简繁转换">简</a><i class="fa fa-moon-o nightshift" id="nightshift" title="夜间模式"></i></section><div id="post_bottom"><div id="post_bottom_items"><a id="to_comment" href="#post-comment"><i class="scroll_to_comment fa fa-comments"></i></a><i class="fa fa-list" id="mobile_toc"></i><div id="toc_mobile"><div class="toc_mobile_headline">目录</div><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#0-概述"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">0.概述</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#1-硬间隔分类器-Hard-Margin-SVM-线性可分支持向量机"><span class="toc_mobile_items-number">2.</span> <span class="toc_mobile_items-text">1.硬间隔分类器 Hard-Margin SVM 线性可分支持向量机</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#问题建模"><span class="toc_mobile_items-number">2.1.</span> <span class="toc_mobile_items-text">问题建模</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#模型转换"><span class="toc_mobile_items-number">2.2.</span> <span class="toc_mobile_items-text">模型转换</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-3"><a class="toc_mobile_items-link" href="#KKT条件"><span class="toc_mobile_items-number">2.3.</span> <span class="toc_mobile_items-text">KKT条件</span></a></li></ol></li></ol></div></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="/js/nightshift.js"></script><script src="/js/tw_cn.js"></script><script>translateInitilization()
+
+</script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@1.2.2/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script><script>const observer = lozad(); // lazy loads elements with default selector as '.lozad'
+observer.observe();</script></body></html>
